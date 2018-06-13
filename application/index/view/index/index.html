@@ -3,6 +3,7 @@
     <title>Excel 处理助手</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/webuploader/webuploader.css">
 </head>
 
 <body>
@@ -17,17 +18,21 @@
             </div>
         </div>
         <div class="h_right">
-            <form class="init_form" action="/init" method="post"  enctype="multipart/form-data">
+            <form class="init_form" method="post">
                 <input type="text" class="init_d" name="D" placeholder="所属医院（D）" >
                 <input type="text" class="init_e" name="E" placeholder="医生（E）" >
-                <input type="file" class="images" name="images" placeholder="图片压缩包（zip）" >
-                <input class="init" type="submit" value="初始化" />
+                <div id="images">zip压缩包</div>
+                <input class="init" id="init" type="button" value="初始化" />
                 <div class="clear"></div>
             </form>
             <hr />
             <div class="tool">
                 <div><label>当前序号 / 总行数</label>： <span class="current_row">-</span> / <span class="total_rows">-</span></div>
                 <div><label>录入结束下载附件</label>： <a href="/down" target="_blank">附件下载</a></div>
+            </div>
+            <hr />
+            <div class="logout">
+                <a href="/logout">退出登陆</a>
             </div>
         </div>
         <div class="clear"></div>
@@ -39,6 +44,7 @@
 
 <!--<div class="loading"><img src="/static/img/loading.gif"></div>-->
 <script src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/webuploader/webuploader.js"></script>
 <script src="/static/js/jquery.form.js"></script>
 <script src="/static/js/tool.js"></script>
 <script src="/static/js/index.js"></script>
@@ -54,6 +60,7 @@
     var inputIndex = 0;     // 当前表单聚焦的input index
     $(function(){
         init();
+
         $(document).keydown(function(e){
             switch (e.keyCode) {
                 case 38:        // 上
@@ -86,6 +93,52 @@
                 default:
                 //alert(e.keyCode);
             }
+        });
+        var uploader = WebUploader.create({
+            swf: '/static/webuploader/Uploader.swf',
+            server: '/upload',
+            fileVal:'upload',
+            pick: {multiple: false, id: '#images', innerHTML: '图片zip'},
+            threads: 1,
+            method: 'POST',
+            auto: false,
+            chunked: true,
+            chunkSize: 30 * 1024 * 1024,
+            resize: false,
+            accept: {
+                title: '压缩文件',
+                extensions: 'zip',
+                mimeTypes: '*'
+            }
+        });
+        //当有文件添加进来的时候
+        uploader.on('uploadBeforeSend', function (obj, data, headers) {
+            // data.DelFilePath = parentObj.siblings(".upload-path").val();
+            //  data.ItemCode = $("#txtItemCode").val();
+            alert(444);
+            // data.formData= { "name": name, "desc": desc};
+        });
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            console.log(percentage, file);
+            // 具体逻辑...
+        });
+        // 文件上传成功处理。
+        uploader.on('uploadSuccess', function (file, response) {
+            // 具体逻辑...
+            console.log('upload success...\n');
+        });
+        // 文件上传失败处理。
+        uploader.on('uploadError', function (file) {
+            // 具体逻辑...
+            console.log(file);
+        });
+        // 上传传完毕，不管成功失败都会调用该事件，主要用于关闭进度条
+        uploader.on('uploadComplete', function (file) {
+            // 具体逻辑...
+        });
+        $("#init").click(function(){
+            uploader.upload();
         });
     });
     resize_reset_work_area_size();

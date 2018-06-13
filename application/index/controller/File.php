@@ -1,34 +1,13 @@
 <?php
 namespace app\index\controller;
 
-use think\Cache;
+use think\Controller;
 use think\Request;
+use app\index\repositories\UserRepository;
 use think\Session;
-use app\index\repositories\FormRepository;
-use app\index\repositories\ImageRepository;
 
-class Index
+class File extends Controller
 {
-    private $template;
-
-    public function __construct()
-    {
-        $this->template = APP_PATH . '/data/template.xlsm';
-    }
-
-    /**
-     * 显示操作页面
-     *
-     * @return \think\response\View
-     */
-    public function index()
-    {
-        $excelInput = get_excel_data();
-        $input = (new FormRepository())->getForm($excelInput);
-
-        return view('index', ['input' => $input]);
-    }
-
 
     /**
      * 初始化操作
@@ -71,12 +50,7 @@ class Index
         return $result;
     }
 
-    /**
-     * 上传附件并转移
-     *
-     * @return array
-     */
-    private function getImagesZip()
+    private function upload()
     {
         $result = ['status' => false, 'data' => []];
         $imgExt = ['bmp', 'jpg', 'jpeg', 'png', 'gif'];
@@ -88,7 +62,7 @@ class Index
             ->rule('get_upload_filename')
             ->move($savePath);
 
-        if($info){
+        if($info) {
             // 成功上传后解压转移数据到 ROOT_PATH . /public/data/
             $filePath = $savePath . $info->getSaveName();
             $unzipPath = ROOT_PATH . 'public/data/' . get_upload_filename() . '/';
@@ -108,28 +82,11 @@ class Index
                 }
                 $result['status'] = true;
             }
-        }else{
+        } else {
             // 上传失败获取错误信息
             $result['data'] = $file->getError();
         }
 
         return $result;
     }
-
-    /**
-     * 删除上次遗留的图片
-     *
-     * @return bool
-     */
-    private function removePrevImages()
-    {
-        $oldImagesDir = ROOT_PATH . 'public/data/' . get_upload_filename() . '/';
-        $command = sprintf('rm -rf  %s', $oldImagesDir);
-        system($command);
-
-        return true;
-    }
-
-
-
 }

@@ -1,0 +1,57 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-size: 14px;
+    font-family: "Microsoft Yahei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.clear {
+    clear: both;
+}
+
+#main {
+    text-align: center;
+}
+
+#main form {
+    display: inline-block;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 3px dashed #00a2d4;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+}
+
+form .header {
+    width: 400px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+.input_control {
+    width: 300px;
+    margin-top: 10px;
+    text-align: right;
+}
+.input_control label {
+    display: inline-block;
+    width: 95px;
+    text-align: right;
+}
+.input_control input[type=text], .input_control input[type=password] {
+    width: 200px;
+}
+.input_control input[type=submit] {
+    width: 120px;
+}
+.error_info {
+    margin-top: 10px;
+    text-align: center;
+}
+.error_info span {
+    font-size: 12px;
+    font-weight: bold;
+    color: red;
+}

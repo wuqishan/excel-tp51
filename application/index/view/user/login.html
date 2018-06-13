@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+    <title>Excel 处理助手</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+
+<body>
+<div id="main">
+    <form action="/do_login" method="post">
+        <div class="header">工具助手</div>
+        <div class="input_control">
+            <label>用户名: </label><input type="text" name="username">
+        </div>
+        <div class="input_control">
+            <label>密码: </label><input type="password" name="password">
+        </div>
+        <div class="input_control">
+            <input type="submit" value="Submit">
+        </div>
+        <div class="error_info">
+            <span>{$Think.session.message}</span>
+        </div>
+    </form>
+</div>
+<script src="/static/js/jquery.min.js"></script>
+<script>
+
+</script>
+</body>
+</html>

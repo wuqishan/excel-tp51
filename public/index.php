@@ -17,9 +17,19 @@ require __DIR__ . '/../thinkphp/base.php';
 
 // 支持事先使用静态方法设置Request对象和Config对象
 
+
+
 define('APP_PATH', __DIR__ . '/../application/');
 
 define('SESSION_PATH', __DIR__ . '/../runtime/session/');
 
+//$dotenv = new \Dotenv\Dotenv( __DIR__ . '../.env');
+//$dotenv->load();
+
+//$env = new Env();
+//$env->load(__DIR__ . '../.env');
+
 // 执行应用并响应
 Container::get('app')->run()->send();
+
+

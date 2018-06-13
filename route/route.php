@@ -13,7 +13,13 @@ Route::get('think', function () {
     return 'hello,ThinkPHP5!';
 });
 
-Route::get('hello/:name', 'index/hello');
+//Route::get('hello/:name', 'index/hello');
+
+Route::get('/','index/Index/index')->middleware('Auth');
+Route::post('/upload','index/File/upload')->middleware('Auth');
+Route::get('/login','index/User/login');
+Route::get('/logout','index/User/logout');
+Route::post('/do_login','index/User/doLogin');
 
 return [
 
