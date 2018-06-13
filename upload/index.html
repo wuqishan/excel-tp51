@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="webuploader/webuploader.css">
+</head>
+<body>
+<div class="container">
+    <div id="uploader-demo">
+        <!--<div id="fileList" class="uploader-list"></div>-->
+        <div id="filePicker" style="height: 30px;">选择文件</div>
+        <button id="btnClick" style="margin-top: 20px;">开始上传</button>
+    </div>
+</div>
+<script type="text/javascript" src="../test_file/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="webuploader/webuploader.js"></script>
+<script>
+    $(function () {
+        var uploader = WebUploader.create({
+
+            // swf文件路径
+            swf: 'webuploader/Uploader.swf',
+            // 文件接收服务端。
+            server: 'upload.php',
+            // [默认值：'file']  设置文件上传域的name。
+            fileVal:'upload',
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick:
+                {
+                    multiple: false,
+                    id: '#filePicker'
+                },
+
+            // 上传并发数。允许同时最大上传进程数[默认值：3]   即上传文件数
+            threads: 1,
+            method: 'POST',
+            formData: { "name": 'aaaa', "desc": 'bbbb'},
+            // 自动上传修改为手动上传
+            auto: false,
+            //是否要分片处理大文件上传。
+            chunked: true,
+            // 如果要分片，分多大一片？ 默认大小为5M.
+            chunkSize: 5 * 1024 * 1024,
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+            accept: {
+                title: '压缩文件',
+                extensions: 'zip',
+                mimeTypes: '*'
+            }
+        });
+        //当有文件添加进来的时候
+        uploader.on('fileQueued', function (file) {
+            //具体逻辑根据项目需求来写  这里只是简单的举个例子写下
+            // $one = $("<div >"+file.name+"</div>");
+            // $("#fileList").append($one);
+
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function (file, percentage) {
+            console.log(percentage, file);
+            // 具体逻辑...
+        });
+        // 文件上传成功处理。
+        uploader.on('uploadSuccess', function (file, response) {
+            // 具体逻辑...
+            console.log('upload success...\n');
+        });
+        // 文件上传失败处理。
+        uploader.on('uploadError', function (file) {
+            // 具体逻辑...
+            console.log(file);
+        });
+        // 上传传完毕，不管成功失败都会调用该事件，主要用于关闭进度条
+        uploader.on('uploadComplete', function (file) {
+            // 具体逻辑...
+        });
+
+        //点击上传按钮触发事件
+        $("#btnClick").click(function(){
+            uploader.upload();
+        });
+
+    });
+
+</script>
+</body>
+</html>

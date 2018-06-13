@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<head>
+    <title>Excel 处理助手</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+
+<body>
+<div id="header">
+    <form id="init_form" action="/init" method="post"  enctype="multipart/form-data">
+        <input type="text" class="init_b" name="B" placeholder="编号（B）" >
+        <input type="text" class="init_d" name="D" placeholder="所属医院（D）" >
+        <input type="text" class="init_e" name="E" placeholder="医生（E）" >
+        <input type="file" class="images" name="images" placeholder="图片压缩包（zip）" style="width: 160px;" >
+        <input class="init" type="submit" value="初始化" />
+    </form>
+    <input class="submit" type="button" value="提交" />
+</div>
+<div id="main">
+    <div class="left"></div>
+    <div class="right">
+        <div class="tool">
+            <span><span>当前序号 / 总行数：</span><span class="current_row">-</span> / <span class="total_rows">-</span></span><br>
+            <span><span>下载附件：</span><a href="/down" target="_blank">附件</a></span>
+        </div>
+        <div class="question">
+            {foreach name="input" item="i"}
+                {$i['input_str']|raw}
+            {/foreach}
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="loading"><img src="/static/img/loading.gif"></div>
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.form.js"></script>
+<script src="/static/js/tool.js"></script>
+<script src="/static/js/index.js"></script>
+<script src="/static/js/callback.js"></script>
+
+<script type="text/javascript">
+    var status = "0";       // 0：还未初始化，1：初始化结束，正在录制当中
+    var lasted = "0";       // 0：不是最后当前一批未录入结束，1：当前一批已经录入结束
+    var images = {};        // 存放的图片
+    var totalRows = 0;      // 本次录入的总行数，等于图片总数量
+    var currentRow = 1;     // 当前录入的行数
+    var showIndex = 0;      // 当前填写表单的第几项
+    var perSelHeight = 154; // 表单选项每次滚动的距离
+    var inputIndex = 0;     // 当前表单聚焦的input index
+    $(function(){
+        init();
+        $(document).keydown(function(e){
+            switch (e.keyCode) {
+                case 38:        // 上
+                    up_press();
+                    break;
+                case 40:        // 下
+                    down_press();
+                    break;
+                case 37:        // 左
+                    left_press();
+                    break;
+                case 39:        // 右
+                    right_press();
+                    break;
+                case 32:        // space
+                    set_focus_on();
+                    break;
+                case 13:        // enter
+                    $('.submit').click();
+                    break;
+                case 33:        // page up  向下移动
+                    move_image(2);
+                    break;
+                case 34:        // page down  向上移动
+                    move_image(1);
+                    break;
+                case 35:        // end  旋转图片
+                    rotate_image(90);
+                    break;
+                default:
+                    //alert(e.keyCode);
+            }
+        });
+
+        $('.submit').click(function() {
+            if (window.lasted === '1') {
+                alert('当前录入已经完成，请下载附件后刷新页面继续录入!');return false;
+            } else if (window.status === "0") {
+                alert('请先初始化后再进行录入和提交操作!');return false;
+            } else if (! confirm('确定提交录制该行？（录入一行后将不得更改！）')) {return false;}
+
+            var data = get_form_data();
+            $.ajax({
+                url: '/add_record',
+                type: 'post',
+                data: data,
+                dataType: 'json',
+                beforeSend: function () {
+                    loading(1);
+                },
+                success: function (result) {
+                    submit_callback(result)
+                }
+            });
+        });
+
+        // 初始化操作
+        $('.init').click(function() {
+            if (window.status === '1') {
+                alert('已经初始化结束，请继续录制即可！'); return false;
+            } else if (! confirm('确定初始化？（将会清除之前的录入，注意下载保存！）')) {return false;}
+
+            var init_b = $('.init_b').val();
+            var init_d = $('.init_d').val();
+            var init_e = $('.init_e').val();
+            if ($.trim(init_b) === '' || $.trim(init_d) === '' || $.trim(init_e) === '') {
+                alert("一下默认初始化数据不能为空：\n-编号\n-所属医院\n-医生");
+                return false;
+            }
+
+            $("#init_form").ajaxForm({
+                beforeSubmit: function(){
+                    loading(1);
+                },
+                success: function(result) {
+                    init_callback(result);
+                }
+            });
+        });
+
+        // 调节工作区的最大高度
+        reset_work_area_size();
+        resize_reset_work_area_size();
+    });
+
+    // 提醒不能刷新
+    window.onbeforeunload=function(){
+        return "你确定要离开吗";
+    }
+
+</script>
+</body>
+</html>

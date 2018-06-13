@@ -1,0 +1,76 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-size: 14px;
+    font-family: "Microsoft Yahei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.clear {
+    clear: both;
+}
+#main {
+    width: 100%;
+    height: 100%;
+}
+#main .header {
+    border: dashed 3px cornflowerblue;
+    border-radius: 8px;
+    padding: 10px;
+}
+#main .header .h_left, #main .header .h_right {
+    padding: 5px;
+}
+#main .header .h_left {
+    width: 55%;
+    overflow: scroll;
+    float: left;
+    padding-left: 274px;
+}
+#main .header .h_right {
+    border: dashed 2px cornflowerblue;
+    border-radius: 5px;
+    width: 20%;
+    float: right;
+}
+#main .header .h_left .left_box {
+    width: 7000px;
+}
+#main .content {
+    height: 100%;
+    border: dashed 3px #f8cbcb;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 10px;
+}
+/****************  问题  ****************/
+.h_left .item_sel {
+    float: left;
+    padding: 10px;
+    height: 120px;
+    margin-right: 10px;
+    border: 2px dashed cornflowerblue;
+    border-radius: 5px;
+    width: 240px;
+}
+.h_left .item_sel label {
+    margin-left: 10px;
+    display: block;
+    margin-top: 2px;
+}
+.h_left .item_sel label > input {
+    margin-right: 5px;
+    position: relative;
+    top: 1px;
+}
+.h_right .init_form input {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    float: left;
+    width: 45%;
+}
+.h_right .tool > div {
+    margin-top: 6px;
+}
+.h_right .tool > div > label {
+    display: inline-block;
+    width: 115px;
+}

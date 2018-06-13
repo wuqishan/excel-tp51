@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+    <title>Excel 处理助手</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+
+<body>
+<div id="main">
+    <div class="header">
+        <div class="h_left">
+            <div class="left_box">
+                {foreach name="input" item="i"}
+                    {$i['input_str']|raw}
+                {/foreach}
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="h_right">
+            <form class="init_form" action="/init" method="post"  enctype="multipart/form-data">
+                <input type="text" class="init_d" name="D" placeholder="所属医院（D）" >
+                <input type="text" class="init_e" name="E" placeholder="医生（E）" >
+                <input type="file" class="images" name="images" placeholder="图片压缩包（zip）" >
+                <input class="init" type="submit" value="初始化" />
+                <div class="clear"></div>
+            </form>
+            <hr />
+            <div class="tool">
+                <div><label>当前序号 / 总行数</label>： <span class="current_row">-</span> / <span class="total_rows">-</span></div>
+                <div><label>录入结束下载附件</label>： <a href="/down" target="_blank">附件下载</a></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="content">
+
+    </div>
+</div>
+
+<!--<div class="loading"><img src="/static/img/loading.gif"></div>-->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/jquery.form.js"></script>
+<script src="/static/js/tool.js"></script>
+<script src="/static/js/index.js"></script>
+<script src="/static/js/callback.js"></script>
+<script>
+    var status = "0";       // 0：还未初始化，1：初始化结束，正在录制当中
+    var lasted = "0";       // 0：不是最后当前一批未录入结束，1：当前一批已经录入结束
+    var images = {};        // 存放的图片
+    var totalRows = 0;      // 本次录入的总行数，等于图片总数量
+    var currentRow = 1;     // 当前录入的行数
+    var showIndex = 0;      // 当前填写表单的第几项
+    var perSelWidth = 274;  // 表单选项每次滚动的距离
+    var inputIndex = 0;     // 当前表单聚焦的input index
+    $(function(){
+        init();
+        $(document).keydown(function(e){
+            switch (e.keyCode) {
+                case 38:        // 上
+                    up_press();
+                    break;
+                case 40:        // 下
+                    down_press();
+                    break;
+                case 37:        // 左
+                    left_press();
+                    break;
+                case 39:        // 右
+                    right_press();
+                    break;
+                case 32:        // space
+                    set_focus_on('');
+                    break;
+                case 13:        // enter
+                    $('.submit').click();
+                    break;
+                case 33:        // page up  向下移动
+                    move_image(2);
+                    break;
+                case 34:        // page down  向上移动
+                    move_image(1);
+                    break;
+                case 35:        // end  旋转图片
+                    rotate_image(90);
+                    break;
+                default:
+                //alert(e.keyCode);
+            }
+        });
+    });
+    resize_reset_work_area_size();
+    reset_work_area_size();
+</script>
+</body>
+</html>
